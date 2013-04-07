@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+	<div id="fb-root"></div>
+	<script src="../src/fbjsdk.min.js"></script>
+	<script>
+	fbjsdk.init({appId : '639220032771852'}, false, function(){	
+		$(function(){
+			$('#get_data').click(function(){
+				fbjsdk.loginFb(function(response){				
+					var output = '';
+					$.each(response, function(index, value){
+						output += index + " : " + value + "<br />";
+					});
+					$('#user_data').html(output);
+				});
+			});
+		});
+	});
+	</script>
+	<a id="get_data" href="javascript:;">Get user data</a>
+	<pre id="user_data"></pre>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</body>
+</html>

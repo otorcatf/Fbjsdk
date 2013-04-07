@@ -41,7 +41,7 @@ The init method have the follow parameter
 * opts => Object (Requiered) => Object with the option for initialization. The available options are:
 	* appID => String (requiered) => Your App ID
 	* channelURL => String (optional) => The URL for your channel file
-	* locale => String (optional) => The localization to load. for default loads 'en_EN' localization
+	* locale => String (optional) => The localization to load. for default loads 'en_US' localization
 	* debug => Boolean (optional) => Load the Javascript SKD in debug mode. The default value is false.
 * autologin	=> Boolean (optional) => If is true will do the user login after the load. The default value is true.
 * callback	=>	Function (requiered) => The fuction to call when the Facebook Javascript SKD is ready to use.

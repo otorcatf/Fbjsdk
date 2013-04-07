@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+	<div id="fb-root"></div>
+	<script src="../src/fbjsdk.min.js"></script>
+	<span>Select a locale to load Javascript SDK</span>
+	<br />
+	<select id='locale_select'>
+		<option value="0">Select a locale...</option>
+	</select>
+	<br /><br />
+	<div class="fb-like" data-href="https://github.com/otorcatf/Fbjsdk" data-send="true" data-width="450" data-show-faces="true"></div>
+	<br /><br />
+	<div class="fb-comments" data-href="https://github.com/otorcatf/Fbjsdk" data-width="470" data-num-posts="10"></div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
+	$(function(){
+		//Load the Facebook XML locale file to fill the options
+		$.ajax({
+			type: "GET",
+			url: "FacebookLocales.xml",
+			dataType: "xml",
+			success: function(xml) {
+				$(xml).find('locale').each(function(){
+					$('<option></option>').html($(this).children('englishName').text()).appendTo($('#locale_select')).val($(this).find('representation').text());				 
+				});	 
+			}
+		});
+		
+		//Load the Facebook Javascript SKD when a locale is selected
+		$('#locale_select').change(function(){
+			fbjsdk.init({appId : '639220032771852', locale : $(this).val()}, false);
+			$(this).before('<a href="locale.html">Load other locale</a>');
+			$(this).remove();		
+		});
+	});
+	</script>
+</body>
+</html>

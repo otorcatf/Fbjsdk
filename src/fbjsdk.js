@@ -6,8 +6,13 @@ var fbjsdk = {
 		if (typeof arguments[1] === "function"){
 			callback = autoload;
 			autoload = true;
-		}		
-		if (!options.appId){ console.error('The appId is requiered'); return false; }
+		}
+		if (fbjsdk.fbready){
+			if (autoload && fbjsdk.userData){ fbjsdk.getUserData(callback); return false; }
+			fbjsdk.loginFb(callback);
+			return false;
+		}
+		if (!options.appId){ console.error('The appId is requiered'); return false; }		
 		window.fbAsyncInit = function() {
 			FB.init({
 			  appId      : options.appId,
@@ -19,6 +24,8 @@ var fbjsdk = {
 			fbjsdk.fbready= true;
 			if (autoload)
 				fbjsdk.loginFb(callback);
+			else if(typeof callback === "function")
+				callback();
 		};
 	  
 		(function(d, s, id, debug){
@@ -30,8 +37,8 @@ var fbjsdk = {
 			 fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk', options.debug ? true : false));
 	},
-	loginFb : function(callback){		
-		FB.getLoginStatus(function(response) {			
+	loginFb : function(callback){
+		FB.getLoginStatus(function(response) {
 			if (response.status === 'connected') {
 				fbjsdk.authResponse = response.authResponse;				
 				fbjsdk.getUserData(function(user_data){
@@ -55,12 +62,15 @@ var fbjsdk = {
 		if (typeof arguments[0] === "function"){
 			callback = user_id;
 			user_id = 'me';
-		}	
+		}
+		if (user_id == 'me' && fbjsdk.userData){
+			callback(fbjsdk.userData);
+			return false;
+		}		
 		FB.api('/'+user_id, function(response) {
 			fbjsdk.userData = response;
 			callback(fbjsdk.userData);
-		});
-	
+		});			
 	},
 	getRequests : function(callback){
 		FB.api('/me/apprequests/', function(response) {
