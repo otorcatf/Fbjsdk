@@ -2,6 +2,7 @@ var fbjsdk = {
 	fbready : false,
 	authResponse : null,	
 	userData : null,
+    fbscope : null,
 	init : function(options, autoload , callback){
 		if (typeof arguments[1] === "function"){
 			callback = autoload;
@@ -12,7 +13,8 @@ var fbjsdk = {
 			fbjsdk.loginFb(callback);
 			return false;
 		}
-		if (!options.appId){ console.error('The appId is requiered'); return false; }		
+		if (!options.appId){ console.error('The appId is requiered'); return false; }
+        fbjsdk.scope = options.scope ? options.scope : null;
 		window.fbAsyncInit = function() {
 			FB.init({
 			  appId      : options.appId,
@@ -54,7 +56,7 @@ var fbjsdk = {
 						callback(response);
 					}					
 					return false;
-				});
+				}, {scope : fbjsdk.scope});
 			}
 		});
 	},
