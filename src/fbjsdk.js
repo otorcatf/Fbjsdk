@@ -8,24 +8,24 @@ var fbjsdk = {
 			callback = autoload;
 			autoload = true;
 		}
-		if (fbjsdk.fbready){
-			if (autoload && fbjsdk.userData){ fbjsdk.getUserData(callback); return false; }
-			fbjsdk.loginFb(callback);
+		if (this.fbready){
+			if (autoload && this.userData){ this.getUserData(callback); return false; }
+			this.loginFb(callback);
 			return false;
 		}
 		if (!options.appId){ console.error('The appId is requiered'); return false; }
-        fbjsdk.scope = options.scope ? options.scope : null;
+        this.fbscope = options.scope ? options.scope : null;
 		window.fbAsyncInit = function() {
 			FB.init({
 			  appId      : options.appId,
 			  channelUrl : options.channelUrl ,
-			  status     : true,
-			  cookie     : true,
-			  xfbml      : true
+			  status     : options.status ? options.status : true,
+			  cookie     : options.cookie ? options.cookie : true,
+			  xfbml      : options.xfbml ? options.xfbml : true
 			});
-			fbjsdk.fbready= true;
+			this.fbready= true;
 			if (autoload)
-				fbjsdk.loginFb(callback);
+				this.loginFb(callback);
 			else if(typeof callback === "function")
 				callback();
 		};
@@ -42,21 +42,21 @@ var fbjsdk = {
 	loginFb : function(callback){
 		FB.getLoginStatus(function(response) {
 			if (response.status === 'connected') {
-				fbjsdk.authResponse = response.authResponse;				
-				fbjsdk.getUserData(function(user_data){
+				this.authResponse = response.authResponse;
+				this.getUserData(function(user_data){
 					callback(user_data);
 				});
 			} else {
 				FB.login(function(response) {
 					if (response.authResponse) {
-						fbjsdk.getUserData(function(user_data){
+						this.getUserData(function(user_data){
 							callback(user_data);							
 						});
 					} else {					
 						callback(response);
 					}					
 					return false;
-				}, {scope : fbjsdk.scope});
+				}, {scope : this.fbscope});
 			}
 		});
 	},
@@ -65,13 +65,13 @@ var fbjsdk = {
 			callback = user_id;
 			user_id = 'me';
 		}
-		if (user_id == 'me' && fbjsdk.userData){
-			callback(fbjsdk.userData);
+		if (user_id == 'me' && this.userData){
+			callback(this.userData);
 			return false;
 		}		
 		FB.api('/'+user_id, function(response) {
-			fbjsdk.userData = response;
-			callback(fbjsdk.userData);
+			this.userData = response;
+			callback(this.userData);
 		});			
 	},
 	getRequests : function(callback){
@@ -82,7 +82,7 @@ var fbjsdk = {
 	},
 	deleteRequests : function(callback){
 		var deleted_requests = 0;
-		fbjsdk.getRequests(function(response){
+		this.getRequests(function(response){
 			if (response.data.length > 0){
 				$.each(response.data, function(index, request){
 					FB.api('/'+request.id,'DELETE', function(response){ deleted_requests++; });					
@@ -91,4 +91,4 @@ var fbjsdk = {
 			}						
 		});
 	}	
-}
+};
