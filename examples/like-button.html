@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div id="fb-root"></div>
+<script src="../src/fbjsdk.min.js"></script>
+<script>
+    fbjsdk.init({appId : '639220032771852'}, false, function(){
+        fbjsdk.likeResponse(function(response){
+            console.log('You like '+response);
+        });
+
+        fbjsdk.unlikeResponse(function(response){
+            console.log('You unlike '+response);
+        });
+    });
+</script>
+<div class="fb-like" data-send="true" data-width="450" data-show-faces="true"></div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</body>
+</html>
