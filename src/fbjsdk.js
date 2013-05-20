@@ -49,14 +49,14 @@ var fbjsdk = {
     loginFb: function (callback) {
         FB.getLoginStatus(function (response) {
             if (response.status === 'connected') {
-                this.authResponse = response.authResponse;
-                this.getUserData(function (user_data) {
+                fbjsdk.authResponse = response.authResponse;
+                fbjsdk.getUserData(function (user_data) {
                     callback(user_data);
                 });
             } else {
                 FB.login(function (response) {
                     if (response.authResponse) {
-                        this.getUserData(function (user_data) {
+                        fbjsdk.getUserData(function (user_data) {
                             callback(user_data);
                         });
                     } else {
@@ -64,7 +64,7 @@ var fbjsdk = {
                     }
                     return false;
                 }, {
-                    scope: this.fbscope
+                    scope: fbjsdk.fbscope
                 });
             }
         });
@@ -79,8 +79,8 @@ var fbjsdk = {
             return false;
         }
         FB.api('/' + user_id, function (response) {
-            this.userData = response;
-            callback(this.userData);
+            fbjsdk.userData = response;
+            callback(fbjsdk.userData);
         });
     },
     getRequests: function (callback) {
